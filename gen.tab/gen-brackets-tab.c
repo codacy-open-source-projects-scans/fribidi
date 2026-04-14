@@ -166,7 +166,7 @@ read_unicode_data_txt_equivalence (
       if (s[0] == '#' || s[0] == '\0' || s[0] == '\n')
 	continue;
       /*  Field:       0 ; 1    ; 2    ; 3    ; 4    ; 5           */
-      i = sscanf (s, "%lx;%*[^;];%*[^;];%*[^;];%*[^;];%[^;]", &c, ce_string);
+      i = sscanf (s, "%lx;%*[^;];%*[^;];%*[^;];%*[^;];%255[^;]", &c, ce_string);
       if (c >= FRIBIDI_UNICODE_CHARS)
         {
           fprintf (stderr, "invalid input at line %ld: %s", l, s);
@@ -263,12 +263,17 @@ read_data (
   clear_tabs ();
 
   if (!(f = fopen (uni_datafile_name, "rt")))
-    die2 ("error: cannot open `%s' for reading", bracket_datafile_name);
+    die2 ("error: cannot open `%s' for reading", uni_datafile_name);
 
   if (!strcmp (uni_datafile_type, "UnicodeData.txt"))
     read_unicode_data_txt_equivalence (f);
   else
-    die2 ("error: unknown data-file-type %s", uni_datafile_type);
+    {
+      fclose (f);
+      die2 ("error: unknown data-file-type %s", uni_datafile_type);
+    }
+
+  fclose (f);
 
   fprintf (stderr, "Reading `%s'\n", bracket_datafile_name);
   if (!(f = fopen (bracket_datafile_name, "rt")))
@@ -277,7 +282,10 @@ read_data (
   if (!strcmp (bracket_datafile_type, "BidiBrackets.txt"))
     read_bidi_brackets_txt (f);
   else
-    die2 ("error: unknown data-file-type %s", bracket_datafile_type);
+    {
+      fclose (f);
+      die2 ("error: unknown data-file-type %s", bracket_datafile_type);
+    }
 
   fclose (f);
 }
