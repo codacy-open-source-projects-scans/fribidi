@@ -21,7 +21,7 @@ dnl   FRIBIDI_BINARY_AGE = FRIBIDI_INTERFACE_AGE = 0;
 dnl
 m4_define(fribidi_major_version, 1)dnl
 m4_define(fribidi_minor_version, 0)dnl
-m4_define(fribidi_micro_version, 16)dnl
+m4_define(fribidi_micro_version, 17)dnl
 m4_define(fribidi_interface_version, 4)dnl
 m4_define(fribidi_interface_age, 0)dnl
 m4_define(fribidi_binary_age, 4)dnl
@@ -97,6 +97,8 @@ AC_MSG_CHECKING([for some Win32 platform])
 AC_MSG_RESULT([$platform_win32])
 AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = "yes")
 
+AM_CONDITIONAL(CROSS_COMPILING, test "x$cross_compiling" = "xyes")
+
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -144,7 +146,7 @@ AC_ARG_ENABLE(deprecated,
                              [do not build deprecated functionality]))
 if test x$enable_deprecated = xno; then
 	AC_DEFINE(FRIBIDI_NO_DEPRECATED, 1,
-		  [Don not build deprecated functionality])
+		  [Do not build deprecated functionality])
 fi
 
 # define FRIBIDI_LIB_STATIC if in static mode
